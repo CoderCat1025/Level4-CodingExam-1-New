@@ -28,67 +28,85 @@ import java.util.Scanner;
  */
 public class Scheduler {
 
-    public static void main(String[] args) {
-    	DaysOfWeek[] week = DaysOfWeek.values();
+	public static void main(String[] args) {
+		DaysOfWeek[] week = DaysOfWeek.values();
 
-    	//preset events for testing and such
-    	week[4].Events.add(new Event(15, "coding class"));
-    	week[3].Events.add(new Event(13, "counselor meeting"));
-    	week[6].Events.add(new Event(12, "zoo"));
-    	
-    	System.out.println("Input a day. (0-6, 0 is Monday and 6 is Sunday.)");
-    	
-    	Scanner scan = new Scanner(System.in);
-    	int day = Integer.parseInt(scan.nextLine());
+		//preset events for testing and such
+		week[4].Events.add(new Event(15, "coding class"));
+		week[3].Events.add(new Event(13, "counselor meeting"));
+		week[6].Events.add(new Event(12, "zoo"));
+		week[0].Events.add(new Event(3, "calling the EVIL number 666 challenge!1!!!!1"));
 
-    	if (day<7 && -1<day) {
-    		System.out.println("Would you like to add, view, or remove events? (ADD/VIEW/REMOVE)");
-    		
-    		String ans = scan.nextLine();
-    		
-    		if (ans.equals("ADD")) {
-    			System.out.println("What time is your event?");
-    			int t = Integer.parseInt(scan.nextLine());
-    			if (t<25&&t>-1) {
-    			
-    			System.out.println("Enter a description of your event.");
-    			String desc = scan.nextLine();
-    			
-    			week[day].Events.add(new Event(t, desc));
-    			
-    			System.out.println("Event: " + desc + " at " + t + "o'clock added!");
-    			
-    			//sort the events after this (not coded yet lol)
-    			} else {
-    				System.out.println("invalid time");
-    			}
-    			
-    		} else if (ans.equals("VIEW")) {
-        		for (int i=0; i<week[day].Events.size(); i++) {
-        			week[day].Events.print();
-        			//it was NOT that easy
-        		}
-    		} else if (ans.equals("REMOVE")) {
-    			System.out.println("What number event would you like to remove?");
-    			int num = Integer.parseInt(scan.nextLine());
-    			if (num<week[day].Events.size() && num>-1) {
-    				//similar to sort, find the event
-    				
-    				for (int i = 0; i <num+1; i++) {
-    					
-    				}
-    				
-    				System.out.println("Event removed!");
-    			} else {
-    				System.out.println("invalid number");
-    			}
-    		} else {
-    			System.out.println("huh");
-    		}
-    		
+		//uhh so im doing this like console store...
+		boolean done = false;
+		Scanner scan = new Scanner(System.in);
 
-    	} else {
-    		System.out.println("dawg that is NOT what i asked for :skull:");
-    	}
-    }
+		do {
+			System.out.println("Input a day. (0-6, 0 is Monday and 6 is Sunday.)");
+
+			int day = Integer.parseInt(scan.nextLine());
+
+			if (day<7 && -1<day) {
+
+				System.out.println("Would you like to add, view, or remove events? (ADD/VIEW/REMOVE)");
+
+				String ans = scan.nextLine();
+
+				switch (ans) {
+				case "ADD":
+					System.out.println("What time is your event? (military time)");
+					int t = Integer.parseInt(scan.nextLine());
+					if (t<25&&t>-1) {
+
+						System.out.println("Enter a description of your event.");
+						String desc = scan.nextLine();
+
+						week[day].Events.add(new Event(t, desc));
+
+						System.out.println("Event: " + desc + " at " + t + "o'clock added!");
+						week[day].sort();
+					} else {
+						System.out.println("invalid time");
+					}
+					break;
+
+				case "VIEW": {
+					if (week[day].Events.size() == 0) {
+						System.out.println("No events for " + week[day] + ".");
+					}else {
+						Node<Event> head = week[day].Events.getHead();
+						for (int i=0; i<week[day].Events.size(); i++) {
+							//it was NOT that hard lolol
+							System.out.println("Event: " + head.getValue().getEvent() + " at " + head.getValue().getTime() + "o'clock.");
+							head = head.getNext();
+						}
+					}
+					break;}
+
+				case "REMOVE": {
+					System.out.println("What number event would you like to remove?");
+					int num = Integer.parseInt(scan.nextLine());
+					if (num<week[day].Events.size() && num>-1) {
+						//IT WAS THAT EASY
+						week[day].Events.remove(num);
+
+
+						System.out.println("Event removed!");
+					} else {
+						System.out.println("invalid number");
+					}
+					break;}
+				default:{
+					System.out.println("huh (make sure to input in all caps!)");
+					break;
+				}
+				}
+
+
+			} else {
+				System.out.println("dawg that is NOT what i asked for :skull:");
+			}
+		} while (done==false);
+		scan.close();
+	}
 }
